@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Travel Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8c97e;
+            --gold-dark: #9a7530;
+            --navy: #0a0f1e;
+            --navy-mid: #111827;
+            --navy-light: #1a2540;
+            --cream: #f5f0e8;
+            --white: #ffffff;
+            --text-muted: #8a8fa8;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--navy);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            padding: 18px 60px;
+            background: rgba(10, 15, 30, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.hide { top: -100px; }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+
+        .logo::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin-top: 2px;
+        }
+
+        .nav-left a, .nav-right a {
+            margin: 0 18px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.75);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-left a::after, .nav-right a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-left a:hover, .nav-right a:hover { color: var(--gold); }
+        .nav-left a:hover::after, .nav-right a:hover::after { width: 100%; }
+
+        /* ── HERO ── */
+        .hero {
+            height: 100vh;
+            background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e") center/cover no-repeat;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(10,15,30,0.3) 0%,
+                rgba(10,15,30,0.55) 60%,
+                rgba(10,15,30,0.9) 100%
+            );
+        }
+
+        /* Decorative corner lines */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 30px;
+            border: 1px solid rgba(201,168,76,0.2);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeUp 1.2s ease both;
+        }
+
+        .hero-eyebrow {
+            font-size: 11px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+
+        .hero-content h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 40px;
+        }
+
+        .hero-content a {
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--navy);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+        }
+
+        /* ── SECTION HEADERS ── */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-eyebrow {
+            font-size: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold));
+        }
+
+        .section-divider::after {
+            background: linear-gradient(90deg, var(--gold), transparent);
+        }
+
+        .divider-diamond {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            transform: rotate(45deg);
+        }
+
+        /* ── DESTINATIONS ── */
+        .destinations {
+            padding: 100px 40px;
+            background: var(--navy-mid);
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .card {
+            width: 220px;
+            height: 320px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,15,30,0.85) 0%, transparent 50%);
+            z-index: 1;
+            transition: background 0.4s;
+        }
+
+        .card:hover::before {
+            background: linear-gradient(to top, rgba(10,15,30,0.95) 0%, rgba(10,15,30,0.3) 100%);
+        }
+
+        /* Gold border on hover */
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(201,168,76,0);
+            z-index: 2;
+            transition: border-color 0.4s;
+        }
+
+        .card:hover::after {
+            border-color: rgba(201,168,76,0.6);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card:hover img { transform: scale(1.08); }
+
+        .card span {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            z-index: 3;
+            letter-spacing: 1px;
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            z-index: 3;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .card:hover .card-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── PACKAGES ── */
+        .packages {
+            padding: 100px 40px;
+            background: var(--navy);
+            position: relative;
+        }
+
+        .packages::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("https://images.unsplash.com/photo-1501785888041-af3ef285b470") center/cover;
+            opacity: 0.07;
+        }
+
+        .package-box {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .package {
+            background: rgba(26, 37, 64, 0.8);
+            border: 1px solid rgba(201,168,76,0.2);
+            padding: 32px 24px;
+            width: 220px;
+            border-radius: 2px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .package::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .package:hover::before { transform: scaleX(1); }
+
+        .package:hover {
+            transform: translateY(-8px);
+            border-color: rgba(201,168,76,0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(201,168,76,0.1);
+        }
+
+        .package h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .package p {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .package span {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .package button {
+            width: 100%;
+            padding: 11px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .package button:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        /* ── BOOKING ── */
+        .booking {
+            padding: 100px 20px;
+            position: relative;
+            background: var(--navy-mid);
+        }
+
+        .booking::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e") center/cover;
+            opacity: 0.06;
+        }
+
+        .booking .section-header { position: relative; z-index: 1; }
+
+        .booking form {
+            background: rgba(10,15,30,0.85);
+            border: 1px solid rgba(201,168,76,0.25);
+            padding: 44px 40px;
+            max-width: 460px;
+            margin: 0 auto;
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .booking form::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .booking input {
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1px;
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            transition: border-color 0.3s, background 0.3s;
+            outline: none;
+        }
+
+        .booking input::placeholder { color: rgba(255,255,255,0.3); }
+
+        .booking input:focus {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.05);
+        }
+
+        .booking input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.6) sepia(1) saturate(3) hue-rotate(5deg);
+        }
+
+        .booking button[type="submit"] {
+            padding: 15px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--navy);
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .booking button[type="submit"]:hover {
+            box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+            transform: translateY(-1px);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            position: relative;
+            background: var(--navy);
+            border-top: 1px solid rgba(201,168,76,0.15);
+            color: white;
+            text-align: center;
+            padding: 70px 20px 24px;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e") center/cover;
+            opacity: 0.04;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .footer h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            color: var(--gold);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .footer p {
+            margin: 6px 0;
+            font-size: 13px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.5px;
+        }
+
+        .contact-info {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .contact-info p strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .footer-bottom {
+            position: relative;
+            z-index: 1;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 16px;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .navbar { padding: 16px 24px; }
+            .nav-left a, .nav-right a { margin: 0 10px; font-size: 10px; }
+            .logo { font-size: 22px; }
+            .hero::after { inset: 15px; }
+            .destinations { padding: 70px 20px; }
+            .packages { padding: 70px 20px; }
+            .booking form { padding: 30px 24px; }
+        }
+
+        @media (max-width: 576px) {
+            .hero-content h1 { font-size: 32px; }
+            .hero-content p { font-size: 14px; }
+            .card { width: 160px; height: 240px; }
+            .package { width: 100%; max-width: 340px; }
+            .booking form { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar" id="navbar">
+    <nav class="nav-left">
+        <a href="#">Home</a>
+        <a href="#destinations">Destinations</a>
+    </nav>
+
+    <h2 class="logo">TravelX</h2>
+
+    <nav class="nav-right">
+        <a href="#packages">Packages</a>
+        <a href="#booking">Contact</a>
+    </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <p class="hero-eyebrow">✦ &nbsp; Curated Luxury Journeys &nbsp; ✦</p>
+        <h1>Explore the <em>World</em> with Us</h1>
+        <p>Discover amazing places and great deals!</p>
+        <a href="#packages"><button class="btn-primary">Get Started</button></a>
+    </div>
+</section>
+
+<!-- Destinations -->
+<section class="destinations" id="destinations">
+    <div class="section-header">
+        <p class="section-eyebrow">✦ &nbsp; Where to go &nbsp; ✦</p>
+        <h2>Popular Destinations</h2>
+        <div class="section-divider"><div class="divider-diamond"></div></div>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e">
+            <span class="card-tag">Featured</span>
+            <span>Maldives</span>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a">
+            <span class="card-tag">Featured</span>
+            <span>Paris</span>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c">
+            <span class="card-tag">Featured</span>
+            <span>Dubai</span>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad">
+            <span class="card-tag">Featured</span>
+            <span>Singapore</span>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+            <span class="card-tag">Featured</span>
+            <span>Switzerland</span>
+        </div>
+    </div>
+</section>
+
+<!-- Packages -->
+<section class="packages" id="packages">
+    <div class="section-header">
+        <p class="section-eyebrow">✦ &nbsp; Travel Experiences &nbsp; ✦</p>
+        <h2>Our Packages</h2>
+        <div class="section-divider"><div class="divider-diamond"></div></div>
+    </div>
+
+    <div class="package-box">
+        <div class="package">
+            <h3>Maldives Tour</h3>
+            <p>3 Days / 2 Nights</p>
+            <span>₹25,000</span>
+            <button onclick="bookPackage('Maldives Tour')">Book Now</button>
+        </div>
+        <div class="package">
+            <h3>Paris Tour</h3>
+            <p>5 Days / 4 Nights</p>
+            <span>₹60,000</span>
+            <button onclick="bookPackage('Paris Tour')">Book Now</button>
+        </div>
+        <div class="package">
+            <h3>Dubai Tour</h3>
+            <p>4 Days / 3 Nights</p>
+            <span>₹40,000</span>
+            <button onclick="bookPackage('Dubai Tour')">Book Now</button>
+        </div>
+        <div class="package">
+            <h3>Singapore Tour</h3>
+            <p>4 Days / 3 Nights</p>
+            <span>₹45,000</span>
+            <button onclick="bookPackage('Singapore Tour')">Book Now</button>
+        </div>
+        <div class="package">
+            <h3>Switzerland Tour</h3>
+            <p>6 Days / 5 Nights</p>
+            <span>₹90,000</span>
+            <button onclick="bookPackage('Switzerland Tour')">Book Now</button>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Section -->
+<section class="booking" id="booking">
+    <div class="section-header">
+        <p class="section-eyebrow">✦ &nbsp; Reserve Your Spot &nbsp; ✦</p>
+        <h2>Book Your Package</h2>
+        <div class="section-divider"><div class="divider-diamond"></div></div>
+    </div>
+
+    <form action="https://formspree.io/f/xqedaegb" method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <input type="text" id="packageName" name="package" placeholder="Selected Package" readonly>
+        <input type="date" name="date" required>
+        <input type="tel" name="contact" placeholder="Contact Number"
+               oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+        <button type="submit">Confirm Booking</button>
+    </form>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <h2>TravelX</h2>
+        <p>Explore the world with us. Your dream vacation starts here.</p>
+        <div class="contact-info">
+            <p><strong>Email:</strong> travelx@gmail.com</p>
+            <p><strong>Phone:</strong> +91 9876543210</p>
+            <p><strong>Location:</strong> Thoothukudi, Tamil Nadu</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 TravelX | All Rights Reserved</p>
+    </div>
+</footer>
+
+<script>
+    function bookPackage(packageName) {
+        document.getElementById("packageName").value = packageName;
+        document.getElementById("booking").scrollIntoView({ behavior: "smooth" });
+    }
+
+    window.onload = function () {
+        const navbar = document.getElementById("navbar");
+        const destinations = document.getElementById("destinations");
+
+        window.addEventListener("scroll", function () {
+            let destTop = destinations.offsetTop;
+            let scrollPos = window.scrollY;
+            if (scrollPos >= destTop - 80) {
+                navbar.classList.add("hide");
+            } else {
+                navbar.classList.remove("hide");
+            }
+        });
+    };
+</script>
+</body>
+</html>
